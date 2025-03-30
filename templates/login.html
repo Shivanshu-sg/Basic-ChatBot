@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+        <div class="card shadow p-4 border rounded-3" style="width: 400px;">
+            <h3 class="card-title text-center mb-4">Login</h3>
+            <div class="form-group mb-3">
+                <input type="text" class="form-control" placeholder="Username" id="username" required/>
+            </div>
+            <div class="form-group mb-3">
+                <input type="text" class="form-control" placeholder="Email" id="email" required/>
+            </div>
+            <div class="form-group mb-4">
+                <input type="password" class="form-control" placeholder="Password" id="password" required/>
+            </div>
+            <button class="btn btn-primary w-100 mb-3" onclick="sendCredentials()">Submit</button>
+            
+            <!-- Google Login Button -->
+            <button class="btn btn-danger w-100 mb-3" id="google-login" onclick="googleLogin()">
+                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" width="20" class="me-2">
+                Login with Google
+            </button>
+
+            <p class="text-center">New User? <a href="{{ url_for('register') }}">Register</a></p>
+            <p id="error-msg" class="text-danger text-center mt-2" style="display: none;"></p>
+        </div>
+    </div>
+
+    <script>
+        function sendCredentials() {
+            const userName = document.getElementById("username").value.trim();
+            const userEmail = document.getElementById("email").value.trim();
+            const userPassword = document.getElementById("password").value.trim();
+            const errorMsg = document.getElementById("error-msg");
+
+            if (!userEmail || !userPassword || !userName) {
+                errorMsg.textContent = "Username, Email and Password are required.";
+                errorMsg.style.display = "block";
+                return;
+            }
+
+            fetch("/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: userEmail, password: userPassword, username: userName }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.access_token) {
+                    localStorage.setItem("access_token", data.access_token);
+                    window.location.href = "/chat"; // Redirect to chat page
+                } else {
+                    errorMsg.textContent = data.message || "Invalid credentials";
+                    errorMsg.style.display = "block";
+                }
+            })
+            .catch(error => {
+                errorMsg.textContent = "Something went wrong. Please try again.";
+                errorMsg.style.display = "block";
+            });
+        }
+
+        // Google Login Redirect
+        function googleLogin() {
+            window.location.href = "/login/google"; // Redirects directly to Google OAuth
+        }
+    </script>
+</body>
+</html>
