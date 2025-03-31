@@ -33,6 +33,10 @@ Users can chat without logging in, but their chat history will only be saved aft
    ```bash
    python main.py
 
+##Screenshots
+![ChatBot Screenshot](https://raw.githubusercontent.com/Shivanshu-sg/Basic-ChatBot/main/chat_screen_1.png)
+![ChatBot Screenshot](https://raw.githubusercontent.com/Shivanshu-sg/Basic-ChatBot/main/chat_screen_2.png)
+
 
 ## Contact
 👤 **Shivanshu Gupta**  
